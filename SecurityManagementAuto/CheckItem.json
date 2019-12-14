@@ -1,0 +1,44 @@
+{
+    "reg": [
+        {
+            "KeyName": {
+                "Machine": "",
+                "FullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\NetBT\\Parameters\\"
+            },
+            "ValueName": "SMBDeviceEnabled",
+            "keyType":"REG_DWORD",
+            "keyValue": 0,
+            "presentation": "过滤TCP 445 端口"
+        },
+        {
+            "KeyName": {
+                "Machine": "",
+                "FullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters"
+            },
+            "ValueName": "AutoShareWks",
+            "keyType":"REG_DWORD",
+            "keyValue": 0,
+            "presentation": "禁用默认共享 一"
+        },
+        {
+            "KeyName": {
+                "Machine": "",
+                "FullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters"
+            },
+            "ValueName": "AutoShareServer",
+            "keyType":"REG_DWORD",
+            "keyValue": 0,
+            "presentation": "禁用默认共享 二"
+        }
+    ],
+    "gp": [
+        {
+            "name":"one",
+            "defaultValue":"ok"
+        },
+        {
+            "name":"two",
+            "defaultValue":"ok"
+        }
+    ]
+}
