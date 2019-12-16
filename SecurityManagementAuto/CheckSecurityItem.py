@@ -25,19 +25,22 @@ def printCheckResultList(checkResultList):
             index = stdout.rindex(item['ValueName'])
             stdout = stdout[index:].splitlines()[0].split(" ")
             it = iter(stdout)
-            next(it)
-            # while True:
-            #     if not next(it).isspace():
-            #         break
             keyType = next(it)
-            # while True:
-            #     if not next(it).isspace() :
-            #         break
-            keyValue=next(it)
-            print("设置成功")
+            keyType = next(it)
+            while keyType is '':
+                keyType = next(it)
+            keyValue = next(it)
+            while keyValue is '':
+                keyValue=next(it)
+            if item['keyType']==keyType and item['keyValue']==keyValue:
+                item['runResultCode']=0#成功
+                print("设置成功")
+            else:
+                item['runResultCode']=1#值错误
+                print('\033[1;32;43m 未设置 \033[0m')
+
         else:
             print('\033[1;32;43m 未设置 \033[0m')
-
 
 REG_QUERY = 'REG QUERY '
 
@@ -51,6 +54,10 @@ checkResultList = []
 
 # 检查注册表项目
 for regItem in regList:
+    #将十进制数转换为十六进制的，方便于进行比较值。
+    if regItem['keyType']=='REG_DWORD':
+        regItem['keyValue']=str(hex(int(regItem['keyValue'])))
+
     cmd = REG_QUERY+regItem['KeyName']['FullKey']+' /v '+regItem['ValueName']
     result = regItem
     result['runResult'] = subprocess.run(

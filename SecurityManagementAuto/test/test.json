@@ -1,0 +1,3 @@
+{'KeyName': {'FullKey': 'HKEY_LOCAL_MACHINE\...ameters\\', 'Machine': ''
+    }, 'ValueName': 'SMBDeviceEnabled', 'keyType': 'REG_DWORD', 'keyValue': '0x0', 'presentation': '过滤TCP 445 端口', 'runResult': CompletedProcess(arg...stderr='')
+}
