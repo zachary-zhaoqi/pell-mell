@@ -1,14 +1,6 @@
-import json
+import sys
 
-a=0x16
+a=sys.version_info
+b=sys.executable
+c=__file__
 print(a)
-
-b=json.dumps(a)
-print(b)
-
-def str_to_hex(s):
-    return ' '.join([hex(ord(c)).replace('0x', '') for c in s])
-
-c=hex(22)
-#d=hex(b)#
-# print(d)
