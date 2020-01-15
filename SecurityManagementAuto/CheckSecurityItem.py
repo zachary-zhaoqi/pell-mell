@@ -7,6 +7,25 @@ import sys
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
 
+def getREGListForJSON(file):
+    """
+    从JSON中读取待设定的注册表项目
+    参数：file 文件路径Union[str, bytes, int]
+    """
+    with open(file, encoding='utf-8') as file:
+        checkList = json.loads(file.read())
+
+    return checkList['reg']
+
+def getgroupPolicyListForJSON(file):
+    """
+    从JSON中读取待设定的组策略项目
+    参数：file 文件路径Union[str, bytes, int]
+    """
+    with open(file, encoding='utf-8') as file:
+        checkList = json.loads(file.read())
+
+    return checkList['gp']
 
 def printCheckResultList(checkResultList):
     """
@@ -49,13 +68,11 @@ def printCheckResultList(checkResultList):
             print('\033[1;32;43m 未设置 \033[0m')
 
 
-def checkREG(regList):
+def checkREG():
     '''
     检查注册表项目是否设置正确
-
-    参数：
-        regList
     '''
+    regList=getREGListForJSON('CheckItem.json')
     checkResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -63,7 +80,7 @@ def checkREG(regList):
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
 
         cmd = REG_QUERY+regItem['keyName']['fullKey'] + \
-            ' /v '+regItem['ValueName']
+            ' /v '+regItem['valueName']
         result = regItem
         result['checkResult'] = subprocess.run(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -75,13 +92,12 @@ def checkREG(regList):
     printCheckResultList(checkResultList)
 
 
-def setAllREG(regList):
+def setAllREG():
     '''
     一键设置注册表项目
-
-    参数：
-        regList
     '''
+
+    regList=getREGListForJSON('CheckItem.json')
     setResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -97,18 +113,14 @@ def setAllREG(regList):
         result['setResult'].stderr = result['setResult'].stderr.decode('gbk')
         setResultList.append(result)
 
-    print(setResultList)
+    # print(setResultList)
 
 
 if __name__ == "__main__":
     # ctypes.windll.shell32.ShellExecuteW(
     #     None, "runas", sys.executable, __file__, None, 1)
 
-    with open('CheckItem.json', encoding='utf-8') as file:
-        checkList = json.loads(file.read())
+    checkREG()
+    setAllREG()
+    checkREG()
 
-    regList = checkList['reg']
-    gpList = checkList['gp']
-
-    checkREG(regList)
-    # setAllREG(regList)
