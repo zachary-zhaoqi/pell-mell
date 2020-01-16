@@ -67,7 +67,6 @@ def printCheckResultList(checkResultList):
             item['checkResultCode'] = 1  # 值项为建立
             print('\033[1;32;43m 未设置 \033[0m')
 
-
 def checkREG():
     '''
     检查注册表项目是否设置正确
@@ -90,7 +89,6 @@ def checkREG():
             'gbk')
         checkResultList.append(result)
     printCheckResultList(checkResultList)
-
 
 def setAllREG():
     '''
@@ -115,6 +113,24 @@ def setAllREG():
 
     # print(setResultList)
 
+def checkGP():
+    '''
+    检查组策略项目是否设置正确
+    '''
+    gpList = getgroupPolicyListForJSON('CheckItem.json')
+
+    result = subprocess.run(
+        'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode != 0:
+        raise Exception("获取本地组策略状态失败!")
+    policy=[]
+    with open('policy.inf',encoding='UTF-16LE') as f:
+        policy=f.read()
+
+    for gpItem in gpList:
+        gpName=gpItem.name
+        index=policy.index(gpName)
+        print(index)
 
 if __name__ == "__main__":
     # ctypes.windll.shell32.ShellExecuteW(
