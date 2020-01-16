@@ -7,16 +7,6 @@ import sys
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
 
-def getREGListForJSON(file):
-    """
-    从JSON中读取待设定的注册表项目
-    参数：file 文件路径Union[str, bytes, int]
-    """
-    with open(file, encoding='utf-8') as file:
-        checkList = json.loads(file.read())
-
-    return checkList['reg']
-
 def getgroupPolicyListForJSON(file):
     """
     从JSON中读取待设定的组策略项目
@@ -26,6 +16,16 @@ def getgroupPolicyListForJSON(file):
         checkList = json.loads(file.read())
 
     return checkList['gp']
+
+def getREGListForJSON(file):
+    """
+    从JSON中读取待设定的注册表项目
+    参数：file 文件路径Union[str, bytes, int]
+    """
+    with open(file, encoding='utf-8') as file:
+        checkList = json.loads(file.read())
+
+    return checkList['reg']
 
 def printCheckResultList(checkResultList):
     """

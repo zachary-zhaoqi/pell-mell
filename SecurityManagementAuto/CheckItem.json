@@ -1,6 +1,7 @@
 {
     "reg": [
         {
+            "isRun":true,
             "keyName": {
                 "machine": "",
                 "fullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\NetBT\\Parameters\\"
@@ -11,6 +12,7 @@
             "presentation": "过滤TCP 445 端口"
         },
         {
+            "isRun":true,
             "keyName": {
                 "machine": "",
                 "fullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters"
@@ -21,6 +23,7 @@
             "presentation": "禁用默认共享 一"
         },
         {
+            "isRun":true,
             "keyName": {
                 "machine": "",
                 "fullKey": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters"
@@ -29,16 +32,115 @@
             "keyType":"REG_DWORD",
             "keyValue": 0,
             "presentation": "禁用默认共享 二"
+        },
+        {
+            "isRun":true,
+            "keyName": {
+                "machine": "",
+                "fullKey": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"
+            },
+            "valueName": "NoDriveTypeAutoRun",
+            "keyType":"REG_DWORD",
+            "keyValue": 255,
+            "presentation": "关闭自动播放"
         }
     ],
     "gp": [
         {
-            "name":"one",
-            "defaultValue":"ok"
+            "isRun":true,
+            "name":"PasswordComplexity",
+            "defaultValue":1,
+            "presentation": "密码必须符合复杂性要求"
         },
         {
-            "name":"two",
-            "defaultValue":"ok"
+            "isRun":true,
+            "name":"MinimumPasswordLength",
+            "defaultValue":12,
+            "presentation": "密码长度最小值"
+        },
+        {
+            "isRun":true,
+            "name":"MaximumPasswordAge",
+            "defaultValue":30,
+            "presentation": "密码最长使用期限"
+        },
+        {
+            "isRun":true,
+            "name":"MinimumPasswordAge",
+            "defaultValue":1,
+            "presentation": "密码最短使用期限"
+        },
+        {
+            "isRun":true,
+            "name":"PasswordHistorySize",
+            "defaultValue":1,
+            "presentation": "强制密码历史"
+        },
+        {
+            "isRun":true,
+            "name":"ClearTextPassword",
+            "defaultValue":0,
+            "presentation": "用可还原的加密来储存密码"
+        },
+        {
+            "isRun":true,
+            "name":"LockoutDuration",
+            "defaultValue":30,
+            "presentation": "帐户锁定时间"
+        },
+        {
+            "isRun":true,
+            "name":"LockoutBadCount",
+            "defaultValue":30,
+            "presentation": "帐户锁定阈值"
+        },
+        {
+            "isRun":true,
+            "name":"AuditPolicyChange",
+            "defaultValue":3,
+            "presentation": "审核策略更改"
+        },
+        {
+            "isRun":true,
+            "name":"AuditLogonEvents",
+            "defaultValue":3,
+            "presentation": "审核登录事件"
+        },
+        {
+            "isRun":true,
+            "name":"AuditSystemEvents",
+            "defaultValue":3,
+            "presentation": "审核系统事件"
+        },
+        {
+            "isRun":true,
+            "name":"AuditAccountLogon",
+            "defaultValue":3,
+            "presentation": "审核帐户登录事件"
+        },
+        {
+            "isRun":true,
+            "name":"AuditAccountM   anage",
+            "defaultValue":3,
+            "presentation": "审核帐户管理"
+        },
+        {
+            "isRun":true,
+            "name":"NewAdministratorName",
+            "defaultValue":"OneAdministrator",
+            "presentation": "重命名系统管理员帐户"
+        },
+        {
+            "isRun":true,
+            "name":"EnableGuestAccount",
+            "defaultValue":0,
+            "presentation": "禁用来宾账户"
+        },
+        {
+            "isRun":true,
+            "name":"EnableAdminAccount",
+            "defaultValue":0,
+            "presentation": "禁用系统管理员帐户"
         }
     ]
 }
