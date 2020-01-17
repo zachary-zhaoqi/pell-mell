@@ -48,96 +48,112 @@
     "gp": [
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"PasswordComplexity",
             "defaultValue":1,
             "presentation": "密码必须符合复杂性要求"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"MinimumPasswordLength",
             "defaultValue":12,
             "presentation": "密码长度最小值"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"MaximumPasswordAge",
             "defaultValue":30,
             "presentation": "密码最长使用期限"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"MinimumPasswordAge",
             "defaultValue":1,
             "presentation": "密码最短使用期限"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"PasswordHistorySize",
             "defaultValue":1,
             "presentation": "强制密码历史"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"ClearTextPassword",
             "defaultValue":0,
             "presentation": "用可还原的加密来储存密码"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"LockoutDuration",
             "defaultValue":30,
             "presentation": "帐户锁定时间"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"LockoutBadCount",
             "defaultValue":30,
             "presentation": "帐户锁定阈值"
         },
         {
             "isRun":true,
+            "classify":"[Event Audit]",
             "name":"AuditPolicyChange",
             "defaultValue":3,
             "presentation": "审核策略更改"
         },
         {
             "isRun":true,
+            "classify":"[Event Audit]",
             "name":"AuditLogonEvents",
             "defaultValue":3,
             "presentation": "审核登录事件"
         },
         {
             "isRun":true,
+            "classify":"[Event Audit]",
             "name":"AuditSystemEvents",
             "defaultValue":3,
             "presentation": "审核系统事件"
         },
         {
             "isRun":true,
+            "classify":"[Event Audit]",
             "name":"AuditAccountLogon",
             "defaultValue":3,
             "presentation": "审核帐户登录事件"
         },
         {
             "isRun":true,
-            "name":"AuditAccountM   anage",
+            "classify":"[Event Audit]",
+            "name":"AuditAccountManage",
             "defaultValue":3,
             "presentation": "审核帐户管理"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"NewAdministratorName",
-            "defaultValue":"OneAdministrator",
+            "defaultValue":"\"OneAdministrator\"",
             "presentation": "重命名系统管理员帐户"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"EnableGuestAccount",
             "defaultValue":0,
             "presentation": "禁用来宾账户"
         },
         {
             "isRun":true,
+            "classify":"[System Access]",
             "name":"EnableAdminAccount",
             "defaultValue":0,
             "presentation": "禁用系统管理员帐户"
