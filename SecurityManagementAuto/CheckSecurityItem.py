@@ -7,6 +7,7 @@ import sys
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
 
+
 def getgroupPolicyListForJSON(file):
     """
     从JSON中读取待设定的组策略项目
@@ -17,6 +18,7 @@ def getgroupPolicyListForJSON(file):
 
     return checkList['gp']
 
+
 def getREGListForJSON(file):
     """
     从JSON中读取待设定的注册表项目
@@ -26,6 +28,7 @@ def getREGListForJSON(file):
         checkList = json.loads(file.read())
 
     return checkList['reg']
+
 
 def printREGCheckResultList(checkResultList):
     """
@@ -67,11 +70,12 @@ def printREGCheckResultList(checkResultList):
             item['checkResultCode'] = 1  # 值项为建立
             print('\033[1;32;43m 未设置 \033[0m')
 
+
 def checkREG():
     '''
     检查注册表项目是否设置正确
     '''
-    regList=getREGListForJSON('CheckItem.json')
+    regList = getREGListForJSON('CheckItem.json')
     checkResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -90,12 +94,13 @@ def checkREG():
         checkResultList.append(result)
     printCheckResultList(checkResultList)
 
+
 def setAllREG():
     '''
     一键设置注册表项目
     '''
 
-    regList=getREGListForJSON('CheckItem.json')
+    regList = getREGListForJSON('CheckItem.json')
     setResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -113,6 +118,7 @@ def setAllREG():
 
     # print(setResultList)
 
+
 def checkGP():
     '''
     检查组策略项目是否设置正确
@@ -123,32 +129,33 @@ def checkGP():
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode != 0:
         raise Exception("获取本地组策略状态失败!")
-    policy=[]
-    with open('policy.inf',encoding='UTF-16LE') as f:
-        policy=f.read()
+    policy = []
+    with open('policy.inf', encoding='UTF-16LE') as f:
+        policy = f.read()
 
-    currentGPList=[]
+    currentGPList = []
     for aletrGPItem in alterGPList:
         try:
-            Name=aletrGPItem['name']
-            index=policy.index(Name)
-            index=index+len(Name)+3#过掉" = "三个符号
-            Value=''
-            while policy[index]!='\n':
-                Value=Value+policy[index]
-                index+=1
+            Name = aletrGPItem['name']
+            index = policy.index(Name)
+            index = index+len(Name)+3  # 过掉" = "三个符号
+            Value = ''
+            while policy[index] != '\n':
+                Value = Value+policy[index]
+                index += 1
         except ValueError:
-            Value=''
+            Value = ''
         finally:
-            currentGPItem={}
-            currentGPItem['name']=Name
-            currentGPItem['value']=Value
+            currentGPItem = {}
+            currentGPItem['name'] = Name
+            currentGPItem['value'] = Value
             currentGPList.append(currentGPItem)
             print(aletrGPItem['presentation'], end=":\t\t\t\t\t")
-            if aletrGPItem['defaultValue']==currentGPItem['value']:
+            if aletrGPItem['defaultValue'] == currentGPItem['value']:
                 print("设置成功")
             else:
                 print('\033[1;32;43m 未设置 \033[0m')
+
 
 def setAllGP():
     alterGPList = getgroupPolicyListForJSON('CheckItem.json')
@@ -157,26 +164,30 @@ def setAllGP():
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode != 0:
         raise Exception("获取本地组策略状态失败!")
-    policy=''
-    with open('policy.inf',encoding='UTF-16LE') as f:
-        policy=f.read()
+    policy = ''
+    with open('policy.inf', encoding='UTF-16LE') as f:
+        policy = f.read()
 
-    newPolicy=policy
+    newPolicy = policy
     for aletrGPItem in alterGPList:
         try:
-            Name=aletrGPItem['name']
-            index=newPolicy.index(Name)
-            index=index+len(Name)+3#过掉" = "三个符号
-            newPolicy=newPolicy[:index]+str(aletrGPItem['defaultValue']) 
-            while newPolicy[index]!='\n':
-                index+=1
-            newPolicy+=newPolicy[index:]
+            Name = aletrGPItem['name']
+            index = policy.index(Name)
+            index = index+len(Name)+3  # 过掉" = "三个符号
+            newPolicy = policy[:index]+str(aletrGPItem['defaultValue'])
+            while policy[index] != '\n':
+                index += 1
+            newPolicy += policy[index:]
         except ValueError:
-            index=newPolicy.index(aletrGPItem['classify'])+1
-            newPolicy=newPolicy[:index]+str(aletrGPItem['name']+' = '+aletrGPItem['defaultValue']) +newPolicy[index:]
-    
-    with open('policy.inf',mode='w',encoding='UTF-16LE') as f:
+            index = policy.index(aletrGPItem['classify'])+len(aletrGPItem['classify'])+1
+            newPolicy = policy[:index]+aletrGPItem['name'] + \
+                ' = '+str(aletrGPItem['defaultValue'])+policy[index:]
+        finally:
+            policy = newPolicy
+
+    with open('policy.inf', mode='w', encoding='UTF-16LE') as f:
         f.write(newPolicy)
+
 
 if __name__ == "__main__":
     # ctypes.windll.shell32.ShellExecuteW(
@@ -187,4 +198,3 @@ if __name__ == "__main__":
     # checkREG()
     # setAllREG()
     # checkREG()
-
