@@ -48,19 +48,19 @@ def printREGCheckResultList(checkResultList):
         i = i+1
         print(str(i)+'. '+item['presentation'], end=":\t\t\t\t")
         # 检测是否符合默认值
-        if item['checkResult'].returncode is 0:
+        if item['checkResult'].returncode == 0:
             stdout = item['checkResult'].stdout
             index = stdout.rindex(item['valueName'])
             stdout = stdout[index:].splitlines()[0].split(" ")
             it = iter(stdout)
             keyType = next(it)
             keyType = next(it)
-            while keyType is '':
+            while keyType == '':
                 keyType = next(it)
             keyValue = next(it)
-            while keyValue is '':
+            while keyValue == '':
                 keyValue = next(it)
-            if item['keyType'] is keyType and item['keyValue'] is keyValue:
+            if item['keyType'] == keyType and item['keyValue'] == keyValue:
                 item['checkResultCode'] = 0  # 成功
                 print("设置成功")
             else:
@@ -80,7 +80,7 @@ def checkREG():
     checkResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
-        if regItem['keyType'] is 'REG_DWORD':
+        if regItem['keyType'] == 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
 
         cmd = REG_QUERY+regItem['keyName']['fullKey'] + \
@@ -105,7 +105,7 @@ def setAllREG():
     setResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
-        if regItem['keyType'] is 'REG_DWORD':
+        if regItem['keyType'] == 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
 
         cmd = REG_ADD+regItem['keyName']['fullKey']+' /v '+regItem['valueName'] + \
@@ -151,8 +151,8 @@ def checkGP():
             currentGPItem['name'] = Name
             currentGPItem['value'] = Value
             currentGPList.append(currentGPItem)
-            print(aletrGPItem['presentation'], end=":\t\t\t\t\t")
-            if aletrGPItem['defaultValue'] is currentGPItem['value']:
+            print(aletrGPItem['presentation'], end=":")
+            if str(aletrGPItem['defaultValue']) == currentGPItem['value']:
                 print("设置成功")
             else:
                 print('\033[1;32;43m 未设置 \033[0m')
@@ -189,14 +189,20 @@ def setAllGP():
 
     with open('policy.inf', mode='w', encoding='UTF-16LE') as f:
         f.write(newPolicy)
-
+    
+    result = subprocess.run(
+        'secedit /configure /db temp.sdb /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode==0:
+        print("设置成功！")
+    else:
+        print("设置失败，请联系作者")
 
 if __name__ == "__main__":
     # ctypes.windll.shell32.ShellExecuteW(
     #     None, "runas", sys.executable, __file__, None, 1)
 
-    # checkGP()
-    setAllGP()
+    checkGP()
+    # setAllGP()
     # checkREG()
     # setAllREG()
     # checkREG()
