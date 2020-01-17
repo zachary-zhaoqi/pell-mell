@@ -91,6 +91,13 @@
         {
             "isRun":true,
             "classify":"[System Access]",
+            "name":"LockoutBadCount",
+            "defaultValue":5,
+            "presentation": "帐户锁定阈值"
+        },
+        {
+            "isRun":true,
+            "classify":"[System Access]",
             "name":"LockoutDuration",
             "defaultValue":30,
             "presentation": "帐户锁定时间"
@@ -98,9 +105,9 @@
         {
             "isRun":true,
             "classify":"[System Access]",
-            "name":"LockoutBadCount",
+            "name":"ResetLockoutCount",
             "defaultValue":30,
-            "presentation": "帐户锁定阈值"
+            "presentation": "重置账户锁定计数器"
         },
         {
             "isRun":true,
