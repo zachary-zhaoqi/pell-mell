@@ -6,6 +6,7 @@ import sys
 
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
+JSONFILE = 'CheckItem.json'
 
 
 def getgroupPolicyListForJSON(file):
@@ -47,7 +48,7 @@ def printREGCheckResultList(checkResultList):
         i = i+1
         print(str(i)+'. '+item['presentation'], end=":\t\t\t\t")
         # 检测是否符合默认值
-        if item['checkResult'].returncode == 0:
+        if item['checkResult'].returncode is 0:
             stdout = item['checkResult'].stdout
             index = stdout.rindex(item['valueName'])
             stdout = stdout[index:].splitlines()[0].split(" ")
@@ -59,7 +60,7 @@ def printREGCheckResultList(checkResultList):
             keyValue = next(it)
             while keyValue is '':
                 keyValue = next(it)
-            if item['keyType'] == keyType and item['keyValue'] == keyValue:
+            if item['keyType'] is keyType and item['keyValue'] is keyValue:
                 item['checkResultCode'] = 0  # 成功
                 print("设置成功")
             else:
@@ -75,11 +76,11 @@ def checkREG():
     '''
     检查注册表项目是否设置正确
     '''
-    regList = getREGListForJSON('CheckItem.json')
+    regList = getREGListForJSON(JSONFILE)
     checkResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
-        if regItem['keyType'] == 'REG_DWORD':
+        if regItem['keyType'] is 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
 
         cmd = REG_QUERY+regItem['keyName']['fullKey'] + \
@@ -100,11 +101,11 @@ def setAllREG():
     一键设置注册表项目
     '''
 
-    regList = getREGListForJSON('CheckItem.json')
+    regList = getREGListForJSON(JSONFILE)
     setResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
-        if regItem['keyType'] == 'REG_DWORD':
+        if regItem['keyType'] is 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
 
         cmd = REG_ADD+regItem['keyName']['fullKey']+' /v '+regItem['valueName'] + \
@@ -123,7 +124,7 @@ def checkGP():
     '''
     检查组策略项目是否设置正确
     '''
-    alterGPList = getgroupPolicyListForJSON('CheckItem.json')
+    alterGPList = getgroupPolicyListForJSON(JSONFILE)
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -151,14 +152,14 @@ def checkGP():
             currentGPItem['value'] = Value
             currentGPList.append(currentGPItem)
             print(aletrGPItem['presentation'], end=":\t\t\t\t\t")
-            if aletrGPItem['defaultValue'] == currentGPItem['value']:
+            if aletrGPItem['defaultValue'] is currentGPItem['value']:
                 print("设置成功")
             else:
                 print('\033[1;32;43m 未设置 \033[0m')
 
 
 def setAllGP():
-    alterGPList = getgroupPolicyListForJSON('CheckItem.json')
+    alterGPList = getgroupPolicyListForJSON(JSONFILE)
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -179,9 +180,10 @@ def setAllGP():
                 index += 1
             newPolicy += policy[index:]
         except ValueError:
-            index = policy.index(aletrGPItem['classify'])+len(aletrGPItem['classify'])+1
+            index = policy.index(
+                aletrGPItem['classify'])+len(aletrGPItem['classify'])+1
             newPolicy = policy[:index]+aletrGPItem['name'] + \
-                ' = '+str(aletrGPItem['defaultValue'])+policy[index:]
+                ' = '+str(aletrGPItem['defaultValue']) + '\n' + policy[index:]
         finally:
             policy = newPolicy
 

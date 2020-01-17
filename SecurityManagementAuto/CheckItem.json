@@ -147,6 +147,13 @@
         {
             "isRun":true,
             "classify":"[System Access]",
+            "name":"NewGuestName",
+            "defaultValue":"\"OneGuest\"",
+            "presentation": "重命名来宾帐户"
+        },
+        {
+            "isRun":true,
+            "classify":"[System Access]",
             "name":"EnableGuestAccount",
             "defaultValue":0,
             "presentation": "禁用来宾账户"
