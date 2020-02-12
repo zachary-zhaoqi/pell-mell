@@ -18,8 +18,9 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
         self.run = True
 
     def SvcDoRun(self):
-        self.logger.info("service is run....")
-        time.sleep(10)
+        while self.run:    
+            self.logger.info("service is run....")
+            time.sleep(10)
 
     def SvcStop(self):
         self.logger.info("service is stop....")
@@ -30,7 +31,12 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
     def _getLogger(self):
         logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(__name__)
-        
+        handler = logging.FileHandler("log.txt")
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        handler.setLevel(logging.INFO)
+        logger.addHandler(handler)
+
         return logger
 
 if __name__ == "__main__":
