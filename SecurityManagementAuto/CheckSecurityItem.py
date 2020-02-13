@@ -93,7 +93,7 @@ def checkREG():
         result['checkResult'].stderr = result['checkResult'].stderr.decode(
             'gbk')
         checkResultList.append(result)
-    printCheckResultList(checkResultList)
+    printREGCheckResultList(checkResultList)
 
 
 def setAllREG():
