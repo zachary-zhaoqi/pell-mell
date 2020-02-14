@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+import json
 
 import win32api
 import win32con
@@ -25,8 +26,10 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
     def SvcDoRun(self):
         while self.run:
             self.logger.info("service is run....")
-            win32api.MessageBox(0, "这是一个测试提醒OK消息框", "提醒",win32con.MB_OK)
-            time.sleep(10)
+            checkREGResultList=CheckSecurityItem.checkREG()
+            self.logger.info("本次检查结果\n==========================")
+            self.logger.info(json.dumps(checkREGResultList))
+            time.sleep(30)
 
     def SvcStop(self):
         self.logger.info("service is stop....")
@@ -38,7 +41,7 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
         logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(__name__)
         current_file_path=os.path.dirname(os.path.abspath(__file__))
-        handler = logging.FileHandler(current_file_path+'\\log.log')
+        handler = logging.FileHandler(current_file_path+'\\checkResult.log')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         handler.setLevel(logging.INFO)

@@ -1,12 +1,16 @@
 # -*- coding: UTF-8 -*-
-import json
-import subprocess
 import ctypes
+import json
+import os
+import subprocess
 import sys
 
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
-JSONFILE = 'CheckItem.json'
+
+current_file_path=os.path.dirname(os.path.abspath(__file__))
+JSONFILE = current_file_path+'\\CheckItem.json'
+# todo: 这个在打包生产时需要改为相对路径
 
 
 def getgroupPolicyListForJSON():
@@ -93,7 +97,11 @@ def checkREG():
         result['checkResult'].stderr = result['checkResult'].stderr.decode(
             'gbk')
         checkResultList.append(result)
-    printREGCheckResultList(checkResultList)
+    # printREGCheckResultList(checkResultList)
+    for item in checkResultList:
+        item['checkResult']=item['checkResult'].__dict__
+
+    return checkResultList
 
 
 def setAllREG():
@@ -156,6 +164,9 @@ def checkGP():
                 print("设置成功")
             else:
                 print('\033[1;32;43m 未设置 \033[0m')
+                print("\033[1;32;43m test \033[0m")
+
+                
 
 
 def setAllGP():
@@ -197,12 +208,15 @@ def setAllGP():
     else:
         print("设置失败，请联系作者")
 
-if __name__ == "__main__":
-    # ctypes.windll.shell32.ShellExecuteW(
-    #     None, "runas", sys.executable, __file__, None, 1)
+# if __name__ == "__main__":
+#     # ctypes.windll.shell32.ShellExecuteW(
+#     #     None, "runas", sys.executable, __file__, None, 1)
 
-    checkGP()
-    # setAllGP()
-    # checkREG()
-    # setAllREG()
-    # checkREG()
+    
+    
+
+#     checkGP()
+#     # setAllGP()
+#     # checkREG()
+#     # setAllREG()
+#     # checkREG()
