@@ -9,23 +9,23 @@ REG_ADD = 'REG ADD '
 JSONFILE = 'CheckItem.json'
 
 
-def getgroupPolicyListForJSON(file):
+def getgroupPolicyListForJSON():
     """
     从JSON中读取待设定的组策略项目
     参数：file 文件路径Union[str, bytes, int]
     """
-    with open(file, encoding='utf-8') as file:
+    with open(JSONFILE, encoding='utf-8') as file:
         checkList = json.loads(file.read())
 
     return checkList['gp']
 
 
-def getREGListForJSON(file):
+def getREGListForJSON():
     """
     从JSON中读取待设定的注册表项目
     参数：file 文件路径Union[str, bytes, int]
     """
-    with open(file, encoding='utf-8') as file:
+    with open(JSONFILE, encoding='utf-8') as file:
         checkList = json.loads(file.read())
 
     return checkList['reg']
@@ -76,7 +76,7 @@ def checkREG():
     '''
     检查注册表项目是否设置正确
     '''
-    regList = getREGListForJSON(JSONFILE)
+    regList = getREGListForJSON()
     checkResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -101,7 +101,7 @@ def setAllREG():
     一键设置注册表项目
     '''
 
-    regList = getREGListForJSON(JSONFILE)
+    regList = getREGListForJSON()
     setResultList = []
     for regItem in regList:
         # 将十进制数转换为十六进制的，方便于进行比较值。
@@ -124,7 +124,7 @@ def checkGP():
     '''
     检查组策略项目是否设置正确
     '''
-    alterGPList = getgroupPolicyListForJSON(JSONFILE)
+    alterGPList = getgroupPolicyListForJSON()
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -159,7 +159,7 @@ def checkGP():
 
 
 def setAllGP():
-    alterGPList = getgroupPolicyListForJSON(JSONFILE)
+    alterGPList = getgroupPolicyListForJSON()
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
