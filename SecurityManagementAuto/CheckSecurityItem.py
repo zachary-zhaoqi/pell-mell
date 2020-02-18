@@ -126,47 +126,6 @@ def get_group_policy_list_for_JSON():
     return check_list['gp']
 
 
-def printREGCheckResultList(checkResultList):
-    """
-    打印注册表检查结果
-
-    参数:
-      checkResultList: [{
-                    "Presentation":""
-                    "checkResult":subprocess.CompletedProcess.class
-                },...]
-    """
-    print("检查结果如下".center(40))
-    print("========================================")
-    i = 0
-    for item in checkResultList:
-        i = i+1
-        print(str(i)+'. '+item['presentation'], end=":\t\t\t\t")
-        # 检测是否符合默认值
-        if item['checkResult'].returncode == 0:
-            stdout = item['checkResult'].stdout
-            index = stdout.rindex(item['valueName'])
-            stdout = stdout[index:].splitlines()[0].split(" ")
-            it = iter(stdout)
-            keyType = next(it)
-            keyType = next(it)
-            while keyType == '':
-                keyType = next(it)
-            keyValue = next(it)
-            while keyValue == '':
-                keyValue = next(it)
-            if item['keyType'] == keyType and item['keyValue'] == keyValue:
-                item['checkResultCode'] = 0  # 成功
-                print("设置成功")
-            else:
-                item['checkResultCode'] = 1  # 值错误
-                print('\033[1;32;43m 未设置 \033[0m')
-
-        else:
-            item['checkResultCode'] = 1  # 值项未建立
-            print('\033[1;32;43m 未设置 \033[0m')
-
-
 def checkGP():
     '''
     检查组策略项目是否设置正确
