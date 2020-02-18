@@ -107,16 +107,14 @@ def read_REG_current_settings():
 def contrast(REGcurrentSettingsList):
     '''对照当前注册表设置与期望是否一致，并返回差异'''
 
-    i = 0
     contrast_result = []
     for item in REGcurrentSettingsList:
-        i+=1
         # 检测是否符合默认值
-        if item['checkResult'].returncode != 0:
-            fail = item['presentation']+'：值项未建立'
+        if item['checkResult']['returncode'] != 0:
+            fail = item['presentation']+'：当前未设置'
             contrast_result.append(fail)
         else:
-            stdout = item['checkResult'].stdout
+            stdout = item['checkResult']['stdout']
             index = stdout.rindex(item['valueName'])
             stdout = stdout[index:].splitlines()[0].split(" ")
             it = iter(stdout)
@@ -128,7 +126,7 @@ def contrast(REGcurrentSettingsList):
             while keyValue == '':
                 keyValue = next(it)
             if item['keyType'] != keyType or item['keyValue'] != keyValue:
-                fail = item['presentation']+'：值项不符合期望'
+                fail = item['presentation']+'：当前设置不符合要求'
                 contrast_result.append(fail)
     return contrast_result
 
@@ -239,8 +237,12 @@ def setAllGP():
 #     # ctypes.windll.shell32.ShellExecuteW(
 #     #     None, "runas", sys.executable, __file__, None, 1)
 
-
-#     checkGP()
+#     current_REG_settings_list=read_REG_current_settings()
+#     a=json.dumps(current_REG_settings_list),ensure_ascii=False)
+#     print(a)
+#     contrast_result=contrast(current_REG_settings_list)
+#     print(contrast_result)
+#     # checkGP()
 #     # setAllGP()
 #     # readREGCurrentSettings()
 #     # setAllREG()

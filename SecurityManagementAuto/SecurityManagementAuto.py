@@ -23,16 +23,20 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
         self.run = True
 
     def SvcDoRun(self):
+        self.logger.info("service is run....")
         while self.run:
-            self.logger.info("service is run....")
             # 根据待检项目读取当前设置并保持在日志
-            REGcurrentSettingsList=checksecurityitem.read_REG_current_settings()
-            self.logger.info("本次检查结果\n==========================")
-            self.logger.info(json.dumps(REGcurrentSettingsList))
-
-            #对照当前设置与期望是否相同 并保存差异在日志中
+            current_REG_settings_list=checksecurityitem.read_REG_current_settings()
+            self.logger.info("==========================本次检查结果==========================")
+            self.logger.info(json.dumps(current_REG_settings_list,ensure_ascii=False))
+            self.logger.info("==========================结果输出完毕==========================")
             
-
+            #对照当前设置与期望是否相同 并保存差异在日志中
+            contrast_result=checksecurityitem.contrast(current_REG_settings_list)
+            self.logger.info("==========================本次修改项目==========================")
+            self.logger.info(json.dumps(contrast_result,ensure_ascii=False))
+            self.logger.info("==========================结果输出完毕==========================")
+            
             time.sleep(30)
 
     def SvcStop(self):
@@ -42,10 +46,10 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
         self.run = False
        
     def _getLogger(self):
+        current_file_path=os.path.dirname(os.path.abspath(__file__))
         logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(__name__)
-        current_file_path=os.path.dirname(os.path.abspath(__file__))
-        handler = logging.FileHandler(current_file_path+'\\log\\checkResult.log')
+        handler = logging.FileHandler(current_file_path+'\\log\\checkResult.log',encoding='utf-8')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         handler.setLevel(logging.INFO)
