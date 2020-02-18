@@ -8,7 +8,7 @@ import sys
 REG_QUERY = 'REG QUERY '
 REG_ADD = 'REG ADD '
 
-current_file_path=os.path.dirname(os.path.abspath(__file__))
+current_file_path = os.path.dirname(os.path.abspath(__file__))
 JSONFILE = current_file_path+'\\CheckItem.json'
 # todo: 这个在打包生产时需要改为相对路径
 
@@ -24,7 +24,7 @@ def getgroupPolicyListForJSON():
     return checkList['gp']
 
 
-def getREGListForJSON():
+def get_REG_list_for_JSON():
     """
     从JSON中读取待设定的注册表项目
     参数：file 文件路径Union[str, bytes, int]
@@ -72,17 +72,17 @@ def printREGCheckResultList(checkResultList):
                 print('\033[1;32;43m 未设置 \033[0m')
 
         else:
-            item['checkResultCode'] = 1  # 值项为建立
+            item['checkResultCode'] = 1  # 值项未建立
             print('\033[1;32;43m 未设置 \033[0m')
 
 
-def checkREG():
+def read_REG_current_settings():
     '''
     检查注册表项目是否设置正确
     '''
-    regList = getREGListForJSON()
-    checkResultList = []
-    for regItem in regList:
+    check_list_REG = get_REG_list_for_JSON()
+    check_result_list = []
+    for regItem in check_list_REG:
         # 将十进制数转换为十六进制的，方便于进行比较值。
         if regItem['keyType'] == 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
@@ -96,12 +96,41 @@ def checkREG():
             'gbk')
         result['checkResult'].stderr = result['checkResult'].stderr.decode(
             'gbk')
-        checkResultList.append(result)
+        check_result_list.append(result)
     # printREGCheckResultList(checkResultList)
-    for item in checkResultList:
-        item['checkResult']=item['checkResult'].__dict__
+    for item in check_result_list:
+        item['checkResult'] = item['checkResult'].__dict__
 
-    return checkResultList
+    return check_result_list
+
+
+def contrast(REGcurrentSettingsList):
+    '''对照当前注册表设置与期望是否一致，并返回差异'''
+
+    i = 0
+    contrast_result = []
+    for item in REGcurrentSettingsList:
+        i+=1
+        # 检测是否符合默认值
+        if item['checkResult'].returncode != 0:
+            fail = item['presentation']+'：值项未建立'
+            contrast_result.append(fail)
+        else:
+            stdout = item['checkResult'].stdout
+            index = stdout.rindex(item['valueName'])
+            stdout = stdout[index:].splitlines()[0].split(" ")
+            it = iter(stdout)
+            keyType = next(it)
+            keyType = next(it)
+            while keyType == '':
+                keyType = next(it)
+            keyValue = next(it)
+            while keyValue == '':
+                keyValue = next(it)
+            if item['keyType'] != keyType or item['keyValue'] != keyValue:
+                fail = item['presentation']+'：值项不符合期望'
+                contrast_result.append(fail)
+    return contrast_result
 
 
 def setAllREG():
@@ -109,9 +138,9 @@ def setAllREG():
     一键设置注册表项目
     '''
 
-    regList = getREGListForJSON()
+    check_list_REG = get_REG_list_for_JSON()
     setResultList = []
-    for regItem in regList:
+    for regItem in check_list_REG:
         # 将十进制数转换为十六进制的，方便于进行比较值。
         if regItem['keyType'] == 'REG_DWORD':
             regItem['keyValue'] = str(hex(int(regItem['keyValue'])))
@@ -166,8 +195,6 @@ def checkGP():
                 print('\033[1;32;43m 未设置 \033[0m')
                 print("\033[1;32;43m test \033[0m")
 
-                
-
 
 def setAllGP():
     alterGPList = getgroupPolicyListForJSON()
@@ -200,10 +227,10 @@ def setAllGP():
 
     with open('policy.inf', mode='w', encoding='UTF-16LE') as f:
         f.write(newPolicy)
-    
+
     result = subprocess.run(
         'secedit /configure /db temp.sdb /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode==0:
+    if result.returncode == 0:
         print("设置成功！")
     else:
         print("设置失败，请联系作者")
@@ -212,11 +239,9 @@ def setAllGP():
 #     # ctypes.windll.shell32.ShellExecuteW(
 #     #     None, "runas", sys.executable, __file__, None, 1)
 
-    
-    
 
 #     checkGP()
 #     # setAllGP()
-#     # checkREG()
+#     # readREGCurrentSettings()
 #     # setAllREG()
-#     # checkREG()
+#     # readREGCurrentSettings()

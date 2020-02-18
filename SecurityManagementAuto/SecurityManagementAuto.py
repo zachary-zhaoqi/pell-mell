@@ -9,8 +9,7 @@ import win32event
 import win32service
 import win32serviceutil
 
-import CheckSecurityItem
-
+import checksecurityitem
 
 class SecurityManagementAuto(win32serviceutil.ServiceFramework):
     _svc_name_ = "SecurityManagementAuto"
@@ -26,9 +25,14 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
     def SvcDoRun(self):
         while self.run:
             self.logger.info("service is run....")
-            checkREGResultList=CheckSecurityItem.checkREG()
+            # 根据待检项目读取当前设置并保持在日志
+            REGcurrentSettingsList=checksecurityitem.read_REG_current_settings()
             self.logger.info("本次检查结果\n==========================")
-            self.logger.info(json.dumps(checkREGResultList))
+            self.logger.info(json.dumps(REGcurrentSettingsList))
+
+            #对照当前设置与期望是否相同 并保存差异在日志中
+            
+
             time.sleep(30)
 
     def SvcStop(self):
@@ -41,7 +45,7 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
         logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(__name__)
         current_file_path=os.path.dirname(os.path.abspath(__file__))
-        handler = logging.FileHandler(current_file_path+'\\checkResult.log')
+        handler = logging.FileHandler(current_file_path+'\\log\\checkResult.log')
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         handler.setLevel(logging.INFO)
