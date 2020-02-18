@@ -10,18 +10,6 @@ REG_ADD = 'REG ADD '
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
 JSONFILE = current_file_path+'\\CheckItem.json'
-# todo: 这个在打包生产时需要改为相对路径
-
-
-def getgroupPolicyListForJSON():
-    """
-    从JSON中读取待设定的组策略项目
-    参数：file 文件路径Union[str, bytes, int]
-    """
-    with open(JSONFILE, encoding='utf-8') as file:
-        checkList = json.loads(file.read())
-
-    return checkList['gp']
 
 
 def get_REG_list_for_JSON():
@@ -33,47 +21,6 @@ def get_REG_list_for_JSON():
         checkList = json.loads(file.read())
 
     return checkList['reg']
-
-
-def printREGCheckResultList(checkResultList):
-    """
-    打印注册表检查结果
-
-    参数:
-      checkResultList: [{
-                    "Presentation":""
-                    "checkResult":subprocess.CompletedProcess.class
-                },...]
-    """
-    print("检查结果如下".center(40))
-    print("========================================")
-    i = 0
-    for item in checkResultList:
-        i = i+1
-        print(str(i)+'. '+item['presentation'], end=":\t\t\t\t")
-        # 检测是否符合默认值
-        if item['checkResult'].returncode == 0:
-            stdout = item['checkResult'].stdout
-            index = stdout.rindex(item['valueName'])
-            stdout = stdout[index:].splitlines()[0].split(" ")
-            it = iter(stdout)
-            keyType = next(it)
-            keyType = next(it)
-            while keyType == '':
-                keyType = next(it)
-            keyValue = next(it)
-            while keyValue == '':
-                keyValue = next(it)
-            if item['keyType'] == keyType and item['keyValue'] == keyValue:
-                item['checkResultCode'] = 0  # 成功
-                print("设置成功")
-            else:
-                item['checkResultCode'] = 1  # 值错误
-                print('\033[1;32;43m 未设置 \033[0m')
-
-        else:
-            item['checkResultCode'] = 1  # 值项未建立
-            print('\033[1;32;43m 未设置 \033[0m')
 
 
 def read_REG_current_settings():
@@ -156,6 +103,7 @@ def set_all_REG():
         item['setResult'] = item['setResult'].__dict__
     return set_REG_result_list
 
+
 def get_set_REG_fail_results(set_REG_result_list):
     """通过设置结果返回设置失败项"""
     set_REG_fail_results = []
@@ -166,11 +114,64 @@ def get_set_REG_fail_results(set_REG_result_list):
             set_REG_fail_results.append(fail)
     return set_REG_fail_results
 
+
+def get_group_policy_list_for_JSON():
+    """
+    从JSON中读取待设定的组策略项目
+    参数：file 文件路径Union[str, bytes, int]
+    """
+    with open(JSONFILE, encoding='utf-8') as file:
+        check_list = json.loads(file.read())
+
+    return check_list['gp']
+
+
+def printREGCheckResultList(checkResultList):
+    """
+    打印注册表检查结果
+
+    参数:
+      checkResultList: [{
+                    "Presentation":""
+                    "checkResult":subprocess.CompletedProcess.class
+                },...]
+    """
+    print("检查结果如下".center(40))
+    print("========================================")
+    i = 0
+    for item in checkResultList:
+        i = i+1
+        print(str(i)+'. '+item['presentation'], end=":\t\t\t\t")
+        # 检测是否符合默认值
+        if item['checkResult'].returncode == 0:
+            stdout = item['checkResult'].stdout
+            index = stdout.rindex(item['valueName'])
+            stdout = stdout[index:].splitlines()[0].split(" ")
+            it = iter(stdout)
+            keyType = next(it)
+            keyType = next(it)
+            while keyType == '':
+                keyType = next(it)
+            keyValue = next(it)
+            while keyValue == '':
+                keyValue = next(it)
+            if item['keyType'] == keyType and item['keyValue'] == keyValue:
+                item['checkResultCode'] = 0  # 成功
+                print("设置成功")
+            else:
+                item['checkResultCode'] = 1  # 值错误
+                print('\033[1;32;43m 未设置 \033[0m')
+
+        else:
+            item['checkResultCode'] = 1  # 值项未建立
+            print('\033[1;32;43m 未设置 \033[0m')
+
+
 def checkGP():
     '''
     检查组策略项目是否设置正确
     '''
-    alterGPList = getgroupPolicyListForJSON()
+    alterGPList = get_group_policy_list_for_JSON()
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -206,7 +207,7 @@ def checkGP():
 
 
 def setAllGP():
-    alterGPList = getgroupPolicyListForJSON()
+    alterGPList = get_group_policy_list_for_JSON()
 
     result = subprocess.run(
         'secedit /export /cfg policy.inf', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
