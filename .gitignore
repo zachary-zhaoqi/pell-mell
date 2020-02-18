@@ -3,3 +3,4 @@ SecurityManagementAuto/__pycache__/CheckSecurityItem.cpython-38.pyc
 SecurityManagementAuto/policy.inf
 SecurityManagementAuto/checkResult.log
 SecurityManagementAuto/.vscode/settings.json
+SecurityManagementAuto/log/*
