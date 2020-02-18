@@ -131,13 +131,13 @@ def contrast(REGcurrentSettingsList):
     return contrast_result
 
 
-def setAllREG():
+def set_all_REG():
     '''
     一键设置注册表项目
     '''
 
     check_list_REG = get_REG_list_for_JSON()
-    setResultList = []
+    set_result_list = []
     for regItem in check_list_REG:
         # 将十进制数转换为十六进制的，方便于进行比较值。
         if regItem['keyType'] == 'REG_DWORD':
@@ -150,9 +150,9 @@ def setAllREG():
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result['setResult'].stdout = result['setResult'].stdout.decode('gbk')
         result['setResult'].stderr = result['setResult'].stderr.decode('gbk')
-        setResultList.append(result)
-
-    # print(setResultList)
+        set_result_list.append(result)
+    
+    return set_result_list
 
 
 def checkGP():
@@ -245,5 +245,5 @@ def setAllGP():
 #     # checkGP()
 #     # setAllGP()
 #     # readREGCurrentSettings()
-#     # setAllREG()
+#     # set_all_REG()
 #     # readREGCurrentSettings()

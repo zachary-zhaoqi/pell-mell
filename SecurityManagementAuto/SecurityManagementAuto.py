@@ -37,6 +37,10 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
             self.logger.info(json.dumps(contrast_result,ensure_ascii=False))
             self.logger.info("==========================结果输出完毕==========================")
             
+            self.logger.info("==========================开始进行设置修改==========================")
+            checksecurityitem.set_all_REG()
+            self.logger.info("==============================修改完毕=============================")
+
             time.sleep(30)
 
     def SvcStop(self):
