@@ -38,7 +38,10 @@ class SecurityManagementAuto(win32serviceutil.ServiceFramework):
             self.logger.info("==========================结果输出完毕==========================")
             
             self.logger.info("==========================开始进行设置修改==========================")
-            checksecurityitem.set_all_REG()
+            set_REG_results=checksecurityitem.set_all_REG()
+            set_REG_fail_results=checksecurityitem.get_set_REG_fail_results(set_REG_results)
+            self.logger.info("============================修改失败项目===========================")
+            self.logger.info(json.dumps(set_REG_fail_results,ensure_ascii=False))
             self.logger.info("==============================修改完毕=============================")
 
             time.sleep(30)

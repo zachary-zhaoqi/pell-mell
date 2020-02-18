@@ -137,7 +137,7 @@ def set_all_REG():
     '''
 
     check_list_REG = get_REG_list_for_JSON()
-    set_result_list = []
+    set_REG_result_list = []
     for regItem in check_list_REG:
         # 将十进制数转换为十六进制的，方便于进行比较值。
         if regItem['keyType'] == 'REG_DWORD':
@@ -150,10 +150,21 @@ def set_all_REG():
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result['setResult'].stdout = result['setResult'].stdout.decode('gbk')
         result['setResult'].stderr = result['setResult'].stderr.decode('gbk')
-        set_result_list.append(result)
+        set_REG_result_list.append(result)
     
-    return set_result_list
+    for item in set_REG_result_list:
+        item['setResult'] = item['setResult'].__dict__
+    return set_REG_result_list
 
+def get_set_REG_fail_results(set_REG_result_list):
+    """通过设置结果返回设置失败项"""
+    set_REG_fail_results = []
+    for item in set_REG_result_list:
+        # 检测是否符合默认值
+        if item['setResult']['returncode'] != 0:
+            fail = item['presentation']+'：当前未设置'
+            set_REG_fail_results.append(fail)
+    return set_REG_fail_results
 
 def checkGP():
     '''
@@ -233,17 +244,17 @@ def setAllGP():
     else:
         print("设置失败，请联系作者")
 
-# if __name__ == "__main__":
-#     # ctypes.windll.shell32.ShellExecuteW(
-#     #     None, "runas", sys.executable, __file__, None, 1)
+if __name__ == "__main__":
+    # ctypes.windll.shell32.ShellExecuteW(
+    #     None, "runas", sys.executable, __file__, None, 1)
 
-#     current_REG_settings_list=read_REG_current_settings()
-#     a=json.dumps(current_REG_settings_list),ensure_ascii=False)
-#     print(a)
-#     contrast_result=contrast(current_REG_settings_list)
-#     print(contrast_result)
-#     # checkGP()
-#     # setAllGP()
-#     # readREGCurrentSettings()
-#     # set_all_REG()
-#     # readREGCurrentSettings()
+    # current_REG_settings_list=read_REG_current_settings()
+    # a=json.dumps(current_REG_settings_list),ensure_ascii=False)
+    # print(a)
+    # contrast_result=contrast(current_REG_settings_list)
+    # print(contrast_result)
+    # checkGP()
+    # setAllGP()
+    # readREGCurrentSettings()
+    set_all_REG()
+    # readREGCurrentSettings()
